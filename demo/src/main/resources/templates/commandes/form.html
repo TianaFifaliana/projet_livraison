@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${editMode} ? 'Modifier commande' : 'Nouvelle commande')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar(${active})}"></nav>
+<div class="container">
+    <h2 class="mb-3" th:text="${editMode} ? 'Modifier la commande' : 'Nouvelle commande'">Commande</h2>
+    <div class="card">
+        <div class="card-body">
+            <form th:action="${editMode} ? @{'/commandes/' + ${commandeId}} : @{/commandes}"
+                  th:object="${commandeRequest}" method="post">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" for="clientId">Client</label>
+                        <select id="clientId" th:field="*{clientId}" class="form-select"
+                                th:classappend="${#fields.hasErrors('clientId')} ? 'is-invalid'">
+                            <option value="">-- Selectionner --</option>
+                            <option th:each="cl : ${clients}" th:value="${cl.id}"
+                                    th:text="${cl.prenom + ' ' + cl.nom}"></option>
+                        </select>
+                        <div class="invalid-feedback" th:errors="*{clientId}"></div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" for="adresseId">Adresse de livraison</label>
+                        <select id="adresseId" th:field="*{adresseId}" class="form-select"
+                                th:classappend="${#fields.hasErrors('adresseId')} ? 'is-invalid'">
+                            <option value="">-- Selectionner --</option>
+                            <option th:each="a : ${adresses}" th:value="${a.id}"
+                                    th:text="${a.rue + ', ' + a.ville}"></option>
+                        </select>
+                        <div class="invalid-feedback" th:errors="*{adresseId}"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" for="montantTotal">Montant total</label>
+                        <input type="number" step="0.01" id="montantTotal" th:field="*{montantTotal}"
+                               class="form-control" th:classappend="${#fields.hasErrors('montantTotal')} ? 'is-invalid'"/>
+                        <div class="invalid-feedback" th:errors="*{montantTotal}"></div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" for="statut">Statut</label>
+                        <select id="statut" th:field="*{statut}" class="form-select">
+                            <option th:each="s : ${statuts}" th:value="${s}" th:text="${s}"></option>
+                        </select>
+                    </div>
+                </div>
+
+                <h5 class="mt-2">Colis</h5>
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle">
+                        <thead class="table-light">
+                        <tr>
+                            <th>Description</th><th>Poids (kg)</th><th>L (cm)</th><th>l (cm)</th><th>H (cm)</th><th>Fragile</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="c, stat : *{colis}">
+                            <td><input class="form-control form-control-sm" th:field="*{colis[__${stat.index}__].description}"/></td>
+                            <td><input type="number" step="0.01" class="form-control form-control-sm" th:field="*{colis[__${stat.index}__].poids}"/></td>
+                            <td><input type="number" step="0.1" class="form-control form-control-sm" th:field="*{colis[__${stat.index}__].longueur}"/></td>
+                            <td><input type="number" step="0.1" class="form-control form-control-sm" th:field="*{colis[__${stat.index}__].largeur}"/></td>
+                            <td><input type="number" step="0.1" class="form-control form-control-sm" th:field="*{colis[__${stat.index}__].hauteur}"/></td>
+                            <td class="text-center"><input type="checkbox" class="form-check-input" th:field="*{colis[__${stat.index}__].fragile}"/></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="text-muted small">Un seul colis est editable via ce formulaire ; la liste des colis peut aussi etre geree via l'API REST.</p>
+
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
+                <a class="btn btn-secondary" th:href="@{/commandes}">Annuler</a>
+            </form>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

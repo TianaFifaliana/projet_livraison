@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Nouvelle livraison')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar(${active})}"></nav>
+<div class="container">
+    <h2 class="mb-3">Nouvelle livraison</h2>
+    <div class="card">
+        <div class="card-body">
+            <form th:action="@{/livraisons}" th:object="${livraisonRequest}" method="post">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" for="commandeId">Commande</label>
+                        <select id="commandeId" th:field="*{commandeId}" class="form-select"
+                                th:classappend="${#fields.hasErrors('commandeId')} ? 'is-invalid'">
+                            <option value="">-- Selectionner --</option>
+                            <option th:each="c : ${commandes}" th:value="${c.id}"
+                                    th:text="${c.reference + ' - ' + c.clientNom}"></option>
+                        </select>
+                        <div class="invalid-feedback" th:errors="*{commandeId}"></div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" for="livreurId">Livreur (optionnel)</label>
+                        <select id="livreurId" th:field="*{livreurId}" class="form-select">
+                            <option value="">-- Non assigne --</option>
+                            <option th:each="lv : ${livreurs}" th:value="${lv.id}"
+                                    th:text="${lv.prenom + ' ' + lv.nom}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" for="dateLivraisonPrevue">Date de livraison prevue</label>
+                        <input type="datetime-local" id="dateLivraisonPrevue" th:field="*{dateLivraisonPrevue}"
+                               class="form-control"/>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" for="statut">Statut</label>
+                        <select id="statut" th:field="*{statut}" class="form-select">
+                            <option th:each="s : ${statuts}" th:value="${s}" th:text="${s}"></option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
+                <a class="btn btn-secondary" th:href="@{/livraisons}">Annuler</a>
+            </form>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

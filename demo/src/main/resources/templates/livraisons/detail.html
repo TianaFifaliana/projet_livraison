@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Livraison')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar(${active})}"></nav>
+<div class="container">
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 th:text="'Livraison #' + ${livraison.id}">Livraison</h2>
+        <a class="btn btn-secondary" th:href="@{/livraisons}">Retour</a>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header bg-white fw-bold">Informations</div>
+                <div class="card-body">
+                    <p><strong>Commande :</strong>
+                        <a th:if="${livraison.commandeId != null}" th:href="@{'/commandes/' + ${livraison.commandeId}}"
+                           th:text="${livraison.commandeReference}"></a>
+                    </p>
+                    <p><strong>Livreur :</strong> <span th:text="${livraison.livreurNom} ?: 'Non assigne'"></span></p>
+                    <p><strong>Statut :</strong> <span class="badge text-bg-info" th:text="${livraison.statut}">statut</span></p>
+                    <p><strong>Prevue :</strong> <span th:text="${livraison.dateLivraisonPrevue} ?: '-'"></span></p>
+                    <p><strong>Reelle :</strong> <span th:text="${livraison.dateLivraisonReelle} ?: '-'"></span></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header bg-white fw-bold">Affectation / Statut</div>
+                <div class="card-body">
+                    <form th:action="@{'/livraisons/' + ${livraison.id} + '/livreur'}" method="post" class="row g-2 mb-3">
+                        <div class="col-8">
+                            <select name="livreurId" class="form-select">
+                                <option th:each="lv : ${livreurs}" th:value="${lv.id}"
+                                        th:text="${lv.prenom + ' ' + lv.nom}"
+                                        th:selected="${livraison.livreurId != null and lv.id == livraison.livreurId}"></option>
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <button class="btn btn-outline-primary w-100" type="submit">Assigner</button>
+                        </div>
+                    </form>
+                    <form th:action="@{'/livraisons/' + ${livraison.id} + '/statut'}" method="post" class="row g-2">
+                        <div class="col-8">
+                            <select name="statut" class="form-select">
+                                <option th:each="s : ${statuts}" th:value="${s}" th:text="${s}"
+                                        th:selected="${s.name() == livraison.statut}"></option>
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <button class="btn btn-primary w-100" type="submit">Statut</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-3">
+        <div class="card-header bg-white fw-bold">Historique de suivi</div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush mb-3">
+                <li class="list-group-item d-flex justify-content-between" th:each="s : ${suivis}">
+                    <span>
+                        <span class="badge text-bg-secondary" th:text="${s.statut}">statut</span>
+                        <span th:text="${s.commentaire}"></span>
+                        <small class="text-muted" th:if="${s.position}" th:text="'(' + ${s.position} + ')'"></small>
+                    </span>
+                    <small class="text-muted" th:text="${s.date}"></small>
+                </li>
+                <li class="list-group-item text-muted" th:if="${#lists.isEmpty(suivis)}">Aucun suivi</li>
+            </ul>
+
+            <form th:action="@{'/livraisons/' + ${livraison.id} + '/suivi'}" th:object="${suiviRequest}" method="post" class="row g-2">
+                <div class="col-md-3">
+                    <select th:field="*{statut}" class="form-select">
+                        <option th:each="s : ${statuts}" th:value="${s}" th:text="${s}"></option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" th:field="*{commentaire}" class="form-control" placeholder="Commentaire"/>
+                </div>
+                <div class="col-md-3">
+                    <input type="text" th:field="*{position}" class="form-control" placeholder="Position"/>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-outline-primary w-100" type="submit">Ajouter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

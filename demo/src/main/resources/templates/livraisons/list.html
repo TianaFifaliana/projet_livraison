@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Livraisons')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar(${active})}"></nav>
+<div class="container">
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Livraisons</h2>
+        <a class="btn btn-primary" th:href="@{/livraisons/new}"><i class="bi bi-plus-lg"></i> Nouvelle livraison</a>
+    </div>
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                <tr>
+                    <th>#</th><th>Commande</th><th>Livreur</th><th>Statut</th>
+                    <th>Prevue le</th><th>Livree le</th><th class="text-end">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="l : ${livraisons}">
+                    <td th:text="${l.id}">1</td>
+                    <td th:text="${l.commandeReference}">ref</td>
+                    <td th:text="${l.livreurNom} ?: 'Non assigne'">livreur</td>
+                    <td><span class="badge text-bg-info" th:text="${l.statut}">statut</span></td>
+                    <td th:text="${l.dateLivraisonPrevue}">date</td>
+                    <td th:text="${l.dateLivraisonReelle} ?: '-'">date</td>
+                    <td class="text-end">
+                        <a class="btn btn-sm btn-outline-secondary" th:href="@{'/livraisons/' + ${l.id}}">
+                            <i class="bi bi-eye"></i>
+                        </a>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(livraisons)}">
+                    <td colspan="7" class="text-center text-muted py-4">Aucune livraison enregistree</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>
