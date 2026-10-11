@@ -1,11 +1,10 @@
 package com.example.livraison.dto.request;
 
-import com.example.livraison.entity.RoleName;
+import com.example.livraison.entity.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,6 +32,6 @@ public class UserRequest {
     @Builder.Default
     private boolean enabled = true;
 
-    @NotEmpty(message = "Au moins un role est obligatoire")
-    private Set<RoleName> roles;
+    @NotNull(message = "Le role est obligatoire")
+    private Role role;
 }

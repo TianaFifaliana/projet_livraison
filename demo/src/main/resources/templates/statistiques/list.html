@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Statistiques')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar(${active})}"></nav>
+<div class="container">
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+    <h2 class="mb-3">Statistiques</h2>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <form class="row g-2" method="get" th:action="@{/statistiques}">
+                <div class="col-md-2">
+                    <select name="periode" class="form-select">
+                        <option value="">Toutes</option>
+                        <option th:each="p : ${periodes}" th:value="${p}" th:text="${p}" th:selected="${param.periode == p.name()}"></option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <input type="datetime-local" name="dateDebut" class="form-control" placeholder="Debut" th:value="${param.dateDebut}"/>
+                </div>
+                <div class="col-md-3">
+                    <input type="datetime-local" name="dateFin" class="form-control" placeholder="Fin" th:value="${param.dateFin}"/>
+                </div>
+                <div class="col-md-2">
+                    <input type="number" name="livreurId" class="form-control" placeholder="Livreur ID" th:value="${param.livreurId}"/>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-primary w-100" type="submit">Filtrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="text-muted">Nombre livraisons</div>
+                    <div class="fs-4 fw-bold" th:text="${stats.nombreLivraisons}">0</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="text-muted">Taux reussite</div>
+                    <div class="fs-4 fw-bold text-success" th:text="${stats.tauxReussite} + '%'">0%</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="text-muted">Taux echec</div>
+                    <div class="fs-4 fw-bold text-danger" th:text="${stats.tauxEchec} + '%'">0%</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="text-muted">Delai moyen (h)</div>
+                    <div class="fs-4 fw-bold" th:text="${stats.delaiMoyenHeures}">0</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-title">Chiffre d'affaires</h6>
+                    <div class="fs-3" th:text="${stats.chiffreAffaires}">0</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-title">Revenu moyen</h6>
+                    <div class="fs-3" th:text="${stats.revenuMoyen}">0</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

@@ -98,14 +98,14 @@
                 <div class="table-responsive">
                     <table class="table table-sm mb-0">
                         <thead>
-                        <tr><th>Reference</th><th>Client</th><th>Statut</th><th class="text-end">Montant</th></tr>
+                        <tr><th>Numero</th><th>Client</th><th>Statut</th><th class="text-end">Prix</th></tr>
                         </thead>
                         <tbody>
                         <tr th:each="c : ${dernieresCommandes}">
-                            <td><a th:href="@{'/commandes/' + ${c.id}}" th:text="${c.reference}">ref</a></td>
+                            <td><a th:href="@{'/commandes/' + ${c.id}}" th:text="${c.numero}">ref</a></td>
                             <td th:text="${c.clientNom}">client</td>
                             <td><span class="badge text-bg-secondary" th:text="${c.statut}">statut</span></td>
-                            <td class="text-end" th:text="${c.montantTotal}">0</td>
+                            <td class="text-end" th:text="${c.prix}">0</td>
                         </tr>
                         <tr th:if="${#lists.isEmpty(dernieresCommandes)}">
                             <td colspan="4" class="text-center text-muted">Aucune commande</td>

@@ -3,47 +3,46 @@ package com.example.livraison.mapper;
 import com.example.livraison.dto.request.RegisterRequest;
 import com.example.livraison.dto.request.UserRequest;
 import com.example.livraison.dto.response.UserResponse;
-import com.example.livraison.entity.Role;
-import com.example.livraison.entity.User;
+import com.example.livraison.entity.Utilisateur;
 import java.util.Set;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserMapper {
 
-    public UserResponse toResponse(User user) {
+    public UserResponse toResponse(Utilisateur utilisateur) {
         return new UserResponse(
-                user.getId(),
-                user.getUsername(),
-                user.getEmail(),
-                user.isEnabled(),
-                user.getRoles().stream().map(role -> role.getName().name()).collect(Collectors.toSet()));
+                utilisateur.getId(),
+                utilisateur.getUsername(),
+                utilisateur.getEmail(),
+                utilisateur.isActif(),
+                Set.of(utilisateur.getRole().name()));
     }
 
-    public User toEntity(UserRequest request) {
-        return User.builder()
+    public Utilisateur toEntity(UserRequest request) {
+        return Utilisateur.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
-                .enabled(request.isEnabled())
+                .actif(request.isEnabled())
+                .role(request.getRole())
                 .build();
     }
 
-    public User toEntity(RegisterRequest request) {
-        return User.builder()
+    public Utilisateur toEntity(RegisterRequest request) {
+        return Utilisateur.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
-                .enabled(true)
+                .actif(true)
+                .role(request.getRole())
                 .build();
     }
 
-    public void apply(UserRequest request, User user) {
-        user.setUsername(request.getUsername());
-        user.setEmail(request.getEmail());
-        user.setEnabled(request.isEnabled());
-    }
-
-    public void assignRoles(Set<Role> roles, User user) {
-        user.setRoles(roles);
+    public void apply(UserRequest request, Utilisateur utilisateur) {
+        utilisateur.setUsername(request.getUsername());
+        utilisateur.setEmail(request.getEmail());
+        utilisateur.setActif(request.isEnabled());
+        if (request.getRole() != null) {
+            utilisateur.setRole(request.getRole());
+        }
     }
 }

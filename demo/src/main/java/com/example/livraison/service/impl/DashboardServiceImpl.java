@@ -40,7 +40,7 @@ public class DashboardServiceImpl implements DashboardService {
                 livreurRepository.count(),
                 commandeRepository.count(),
                 livraisonRepository.count(),
-                commandeRepository.countByStatut(StatutCommande.EN_ATTENTE),
+                commandeRepository.countByStatut(StatutCommande.CREEE),
                 commandeRepository.countByStatut(StatutCommande.LIVREE),
                 livraisonRepository.countByStatut(StatutLivraison.EN_COURS),
                 paiementRepository.countByStatut(StatutPaiement.PAYE));

@@ -13,8 +13,9 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 
-@RestControllerAdvice
+@RestControllerAdvice(basePackages = "com.example.livraison.controller.rest")
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
@@ -22,14 +23,19 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.NOT_FOUND, ex.getMessage(), request, null);
     }
 
-    @ExceptionHandler(DuplicateResourceException.class)
-    public ResponseEntity<ApiError> handleDuplicate(DuplicateResourceException ex, HttpServletRequest request) {
-        return build(HttpStatus.CONFLICT, ex.getMessage(), request, null);
-    }
-
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ApiError> handleBusiness(BusinessException ex, HttpServletRequest request) {
         return build(HttpStatus.BAD_REQUEST, ex.getMessage(), request, null);
+    }
+
+    @ExceptionHandler(InvalidOperationException.class)
+    public ResponseEntity<ApiError> handleInvalidOperation(InvalidOperationException ex, HttpServletRequest request) {
+        return build(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage(), request, null);
+    }
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ApiError> handleConflict(ConflictException ex, HttpServletRequest request) {
+        return build(HttpStatus.CONFLICT, ex.getMessage(), request, null);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -48,6 +54,12 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.BAD_REQUEST, "Erreur de validation", request, details);
     }
 
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiError> handleMessageNotReadable(HttpMessageNotReadableException ex,
+                                                             HttpServletRequest request) {
+        return build(HttpStatus.BAD_REQUEST, "Corps de requete illisible ou mal forme", request, null);
+    }
+
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ApiError> handleBadCredentials(BadCredentialsException ex, HttpServletRequest request) {
         return build(HttpStatus.UNAUTHORIZED, "Identifiants invalides", request, null);
@@ -60,7 +72,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> handleGeneric(Exception ex, HttpServletRequest request) {
-        return build(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), request, null);
+        return build(HttpStatus.INTERNAL_SERVER_ERROR, "Une erreur interne est survenue", request, null);
     }
 
     private ResponseEntity<ApiError> build(HttpStatus status, String message, HttpServletRequest request,

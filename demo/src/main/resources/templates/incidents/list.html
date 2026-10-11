@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Incidents')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar(${active})}"></nav>
+<div class="container">
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Incidents</h2>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#incidentModal">
+            <i class="bi bi-plus-lg"></i> Signaler un incident
+        </button>
+    </div>
+
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                <tr>
+                    <th>#</th><th>Type</th><th>Description</th><th>Commande</th><th>Livreur</th><th>Date</th><th>Resolue</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="i : ${incidents}">
+                    <td th:text="${i.id}">1</td>
+                    <td th:text="${i.type}">type</td>
+                    <td th:text="${i.description}">desc</td>
+                    <td th:text="${i.commandeNumero}">cmd</td>
+                    <td th:text="${i.livreurNom}">livreur</td>
+                    <td th:text="${i.dateIncident}">date</td>
+                    <td>
+                        <span class="badge" th:classappend="${i.resolu} ? 'text-bg-success' : 'text-bg-danger'"
+                              th:text="${i.resolu} ? 'Oui' : 'Non'">Non</span>
+                    </td>
+                    <td class="text-end">
+                        <button th:if="${!i.resolu}" type="button" class="btn btn-sm btn-outline-success"
+                                data-bs-toggle="modal" data-bs-target="#resoudreModal" data-incident-id="${i.id}">
+                            <i class="bi bi-check2-all"></i> Resoudre
+                        </button>
+                        <span th:if="${i.resolu}" class="text-muted small" th:text="${i.dateResolution}"></span>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(incidents)}">
+                    <td colspan="8" class="text-center text-muted py-4">Aucun incident</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="incidentModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form th:action="@{/incidents}" th:object="${incidentRequest}" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title">Signaler un incident</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label" for="type">Type</label>
+                        <select id="type" th:field="*{type}" class="form-select">
+                            <option th:each="t : ${types}" th:value="${t}" th:text="${t}"></option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="commandeId">Commande</label>
+                        <select id="commandeId" th:field="*{commandeId}" class="form-select">
+                            <option value="">-- Selectionner --</option>
+                            <option th:each="c : ${commandes}" th:value="${c.id}" th:text="${c.numero}"></option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="livreurId">Livreur</label>
+                        <select id="livreurId" th:field="*{livreurId}" class="form-select">
+                            <option value="">-- Selectionner --</option>
+                            <option th:each="l : ${livreurs}" th:value="${l.id}" th:text="${l.prenom + ' ' + l.nom}"></option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="description">Description</label>
+                        <textarea id="description" th:field="*{description}" class="form-control" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="resoudreModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="resoudreForm" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title">Resoudre l'incident</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label" for="commentaireResolution">Commentaire de resolution</label>
+                        <textarea id="commentaireResolution" name="commentaireResolution" class="form-control" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-success">Resoudre</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<script>
+    const resoudreModal = document.getElementById('resoudreModal');
+    resoudreModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const incidentId = button.getAttribute('data-incident-id');
+        const form = document.getElementById('resoudreForm');
+        form.action = '/incidents/' + incidentId + '/resoudre';
+    });
+</script>
+</body>
+</html>

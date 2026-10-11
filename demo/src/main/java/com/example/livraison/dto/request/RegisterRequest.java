@@ -1,6 +1,6 @@
 package com.example.livraison.dto.request;
 
-import com.example.livraison.entity.RoleName;
+import com.example.livraison.entity.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -40,5 +40,5 @@ public class RegisterRequest {
     private String telephone;
 
     @NotNull(message = "Le role est obligatoire")
-    private RoleName role;
+    private Role role;
 }

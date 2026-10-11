@@ -1,7 +1,9 @@
 package com.example.livraison.security;
 
-import com.example.livraison.entity.User;
-import com.example.livraison.repository.UserRepository;
+import com.example.livraison.entity.Utilisateur;
+import com.example.livraison.repository.UtilisateurRepository;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,18 +13,22 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final UtilisateurRepository utilisateurRepository;
 
-    public CustomUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public CustomUserDetailsService(UtilisateurRepository utilisateurRepository) {
+        this.utilisateurRepository = utilisateurRepository;
     }
 
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username)
+        Utilisateur utilisateur = utilisateurRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Utilisateur introuvable : " + username));
-        user.getRoles().size();
-        return user;
+        return User.builder()
+                .username(utilisateur.getUsername())
+                .password(utilisateur.getPassword())
+                .authorities(new SimpleGrantedAuthority("ROLE_" + utilisateur.getRole().name()))
+                .disabled(!utilisateur.isActif())
+                .build();
     }
 }

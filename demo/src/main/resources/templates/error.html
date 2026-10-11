@@ -4,9 +4,12 @@
 <body>
 <nav th:replace="~{fragments/layout :: navbar('')}"></nav>
 <div class="container text-center py-5">
-    <h1 class="display-4" th:text="${status} ?: 'Erreur'">Erreur</h1>
-    <p class="lead" th:text="${error} ?: 'Une erreur est survenue'">Une erreur est survenue</p>
-    <p class="text-muted" th:text="${message}">Details</p>
+    <h1 class="display-4" th:text="${error} ?: 'Erreur'">Erreur</h1>
+    <p class="lead" th:text="${message} ?: 'Une erreur est survenue'">Une erreur est survenue</p>
+    <ul class="list-unstyled text-danger" th:if="${details != null and !details.isEmpty()}">
+        <li th:each="detail : ${details}" th:text="${detail}"></li>
+    </ul>
+    <p class="text-muted small" th:if="${path}" th:text="'Chemin : ' + ${path}"></p>
     <a class="btn btn-primary mt-3" th:href="@{/dashboard}">Retour au tableau de bord</a>
 </div>
 <footer th:replace="~{fragments/layout :: footer}"></footer>

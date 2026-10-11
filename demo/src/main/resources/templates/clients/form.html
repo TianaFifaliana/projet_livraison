@@ -38,8 +38,12 @@
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label" for="userId">Compte utilisateur (optionnel)</label>
-                    <select id="userId" th:field="*{userId}" class="form-select">
+                    <label class="form-label" for="adresse">Adresse</label>
+                    <input type="text" id="adresse" th:field="*{adresse}" class="form-control"/>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="utilisateurId">Compte utilisateur (optionnel)</label>
+                    <select id="utilisateurId" th:field="*{utilisateurId}" class="form-select">
                         <option value="">-- Aucun --</option>
                         <option th:each="u : ${users}" th:value="${u.id}"
                                 th:text="${u.username + ' (' + u.email + ')'}"></option>

@@ -54,25 +54,25 @@ public class LivraisonRestController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','OPERATOR')")
     public ResponseEntity<LivraisonResponse> create(@Valid @RequestBody LivraisonRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(livraisonService.create(request));
     }
 
     @PutMapping("/{id}/livreur/{livreurId}")
-    @PreAuthorize("hasAnyRole('ADMIN','LIVREUR')")
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','OPERATOR')")
     public ResponseEntity<LivraisonResponse> assignerLivreur(@PathVariable Long id, @PathVariable Long livreurId) {
         return ResponseEntity.ok(livraisonService.assignerLivreur(id, livreurId));
     }
 
     @PutMapping("/{id}/statut")
-    @PreAuthorize("hasAnyRole('ADMIN','LIVREUR')")
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','OPERATOR')")
     public ResponseEntity<LivraisonResponse> updateStatut(@PathVariable Long id, @RequestParam StatutLivraison statut) {
         return ResponseEntity.ok(livraisonService.updateStatut(id, statut));
     }
 
     @PostMapping("/suivis")
-    @PreAuthorize("hasAnyRole('ADMIN','LIVREUR')")
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','OPERATOR')")
     public ResponseEntity<SuiviResponse> addSuivi(@Valid @RequestBody SuiviRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(suiviService.add(request));
     }

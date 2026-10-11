@@ -2,18 +2,22 @@ package com.example.livraison.dto.response;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 public record CommandeResponse(
         Long id,
-        String reference,
-        LocalDateTime dateCommande,
+        String numero,
+        String adresseEnlevement,
+        String adresseLivraison,
+        Double poids,
+        Double volume,
+        String priorite,
+        Double distance,
+        BigDecimal prix,
+        LocalDateTime datePrevue,
+        LocalDateTime dateCreation,
         String statut,
-        BigDecimal montantTotal,
         Long clientId,
         String clientNom,
-        AdresseResponse adresseLivraison,
-        List<ColisResponse> colis,
-        Long livraisonId,
-        Long paiementId) {
+        Long livreurId,
+        Long zoneId) {
 }

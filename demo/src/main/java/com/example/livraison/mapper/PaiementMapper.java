@@ -12,7 +12,7 @@ public class PaiementMapper {
         return new PaiementResponse(
                 paiement.getId(),
                 paiement.getCommande() != null ? paiement.getCommande().getId() : null,
-                paiement.getCommande() != null ? paiement.getCommande().getReference() : null,
+                paiement.getCommande() != null ? paiement.getCommande().getNumero() : null,
                 paiement.getMontant(),
                 paiement.getMethode().name(),
                 paiement.getStatut().name(),

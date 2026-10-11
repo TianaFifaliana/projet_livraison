@@ -1,7 +1,7 @@
 package com.example.livraison.controller.web;
 
 import com.example.livraison.dto.request.RegisterRequest;
-import com.example.livraison.entity.RoleName;
+import com.example.livraison.entity.Role;
 import com.example.livraison.exception.BusinessException;
 import com.example.livraison.exception.DuplicateResourceException;
 import com.example.livraison.service.AuthService;
@@ -34,7 +34,7 @@ public class AuthWebController {
         if (!model.containsAttribute("registerRequest")) {
             model.addAttribute("registerRequest", new RegisterRequest());
         }
-        model.addAttribute("roles", List.of(RoleName.CLIENT, RoleName.LIVREUR));
+        model.addAttribute("roles", List.of(Role.CLIENT, Role.LIVREUR));
         return "register";
     }
 
@@ -42,13 +42,13 @@ public class AuthWebController {
     public String register(@Valid @ModelAttribute("registerRequest") RegisterRequest request,
                            BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("roles", List.of(RoleName.CLIENT, RoleName.LIVREUR));
+            model.addAttribute("roles", List.of(Role.CLIENT, Role.LIVREUR));
             return "register";
         }
         try {
             authService.register(request);
         } catch (DuplicateResourceException | BusinessException ex) {
-            model.addAttribute("roles", List.of(RoleName.CLIENT, RoleName.LIVREUR));
+            model.addAttribute("roles", List.of(Role.CLIENT, Role.LIVREUR));
             model.addAttribute("errorMessage", ex.getMessage());
             return "register";
         }

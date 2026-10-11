@@ -38,6 +38,14 @@
                     <a class="nav-link" th:classappend="${active == 'livraisons'} ? 'active'"
                        th:href="@{/livraisons}">Livraisons</a>
                 </li>
+                <li class="nav-item" sec:authorize="hasAnyRole('ADMIN','MANAGER','OPERATOR')">
+                    <a class="nav-link" th:classappend="${active == 'incidents'} ? 'active'"
+                       th:href="@{/incidents}">Incidents</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyRole('ADMIN','MANAGER')">
+                    <a class="nav-link" th:classappend="${active == 'statistiques'} ? 'active'"
+                       th:href="@{/statistiques}">Statistiques</a>
+                </li>
                 <li class="nav-item" sec:authorize="hasRole('ADMIN')">
                     <a class="nav-link" th:classappend="${active == 'clients'} ? 'active'"
                        th:href="@{/clients}">Clients</a>
@@ -45,6 +53,10 @@
                 <li class="nav-item" sec:authorize="hasRole('ADMIN')">
                     <a class="nav-link" th:classappend="${active == 'livreurs'} ? 'active'"
                        th:href="@{/livreurs}">Livreurs</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                    <a class="nav-link" th:classappend="${active == 'tarifs'} ? 'active'"
+                       th:href="@{/tarifs}">Tarifs</a>
                 </li>
             </ul>
             <span class="navbar-text text-light me-3" sec:authorize="isAuthenticated()">

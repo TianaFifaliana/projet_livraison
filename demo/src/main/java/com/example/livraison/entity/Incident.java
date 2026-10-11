@@ -43,6 +43,16 @@ public class Incident {
     @Column(updatable = false)
     private LocalDateTime dateIncident;
 
+    @Builder.Default
+    @Column
+    private Boolean resolu = false;
+
+    @Column
+    private LocalDateTime dateResolution;
+
+    @Column(length = 500)
+    private String commentaireResolution;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "commande_id", nullable = false)
     private Commande commande;

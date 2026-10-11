@@ -45,6 +45,9 @@ public class PreuveLivraison {
     @Column
     private LocalDateTime dateLivraison;
 
+    @Column(length = 20)
+    private String codeConfirmation;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "commande_id", nullable = false, unique = true)
     private Commande commande;

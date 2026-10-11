@@ -1,6 +1,6 @@
 package com.example.livraison.mapper;
 
-import com.example.livraison.dto.request.ClientRequest;
+import com.example.livraison.dto.request.CreateClientRequest;
 import com.example.livraison.dto.response.ClientResponse;
 import com.example.livraison.entity.Client;
 import org.springframework.stereotype.Component;
@@ -15,23 +15,25 @@ public class ClientMapper {
                 client.getPrenom(),
                 client.getTelephone(),
                 client.getEmail(),
-                client.getDateInscription(),
-                client.getUser() != null ? client.getUser().getId() : null);
+                client.getAdresse(),
+                client.getUtilisateur() != null ? client.getUtilisateur().getId() : null);
     }
 
-    public Client toEntity(ClientRequest request) {
+    public Client toEntity(CreateClientRequest request) {
         return Client.builder()
                 .nom(request.getNom())
                 .prenom(request.getPrenom())
                 .telephone(request.getTelephone())
                 .email(request.getEmail())
+                .adresse(request.getAdresse())
                 .build();
     }
 
-    public void apply(ClientRequest request, Client client) {
+    public void apply(CreateClientRequest request, Client client) {
         client.setNom(request.getNom());
         client.setPrenom(request.getPrenom());
         client.setTelephone(request.getTelephone());
         client.setEmail(request.getEmail());
+        client.setAdresse(request.getAdresse());
     }
 }

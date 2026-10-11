@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Tarifs')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar(${active})}"></nav>
+<div class="container">
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Tarifs</h2>
+        <a class="btn btn-primary" th:href="@{/tarifs/new}">
+            <i class="bi bi-plus-lg"></i> Nouveau tarif
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                <tr>
+                    <th>#</th><th>Libelle</th><th>Prix base</th><th>Prix/km</th><th>Prix/kg</th><th>Par defaut</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="t : ${tarifs}">
+                    <td th:text="${t.id}">1</td>
+                    <td th:text="${t.libelle}">libelle</td>
+                    <td th:text="${t.prixBase}">0</td>
+                    <td th:text="${t.prixParKm}">0</td>
+                    <td th:text="${t.prixParKg}">0</td>
+                    <td>
+                        <span class="badge text-bg-success" th:if="${t.parDefaut}">Oui</span>
+                        <span class="badge text-bg-secondary" th:if="${!t.parDefaut}">Non</span>
+                    </td>
+                    <td class="text-end">
+                        <a class="btn btn-sm btn-outline-secondary" th:href="@{'/tarifs/' + ${t.id} + '/edit'}">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <form class="d-inline" th:action="@{'/tarifs/' + ${t.id} + '/delete'}" method="post"
+                              onsubmit="return confirm('Supprimer ce tarif ?');">
+                            <button class="btn btn-sm btn-outline-danger" type="submit"><i class="bi bi-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(tarifs)}">
+                    <td colspan="7" class="text-center text-muted py-4">Aucun tarif</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

@@ -1,0 +1,121 @@
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by lombok.permit.Permit
+WARNING: Please consider reporting this to the maintainers of class lombok.permit.Permit
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[ERROR] COMPILATION ERROR : 
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/dto/request/CommandeRequest.java:[30,51] cannot find symbol
+  symbol:   variable EN_ATTENTE
+  location: class com.example.livraison.entity.StatutCommande
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/entity/User.java:[72,71] cannot find symbol
+  symbol:   method getName()
+  location: variable role of type com.example.livraison.entity.Role
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/mapper/ColisMapper.java:[16,22] cannot find symbol
+  symbol:   method getLongueur()
+  location: variable colis of type com.example.livraison.entity.Colis
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/mapper/ColisMapper.java:[17,22] cannot find symbol
+  symbol:   method getLargeur()
+  location: variable colis of type com.example.livraison.entity.Colis
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/mapper/ColisMapper.java:[18,22] cannot find symbol
+  symbol:   method getHauteur()
+  location: variable colis of type com.example.livraison.entity.Colis
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/mapper/ColisMapper.java:[27,17] cannot find symbol
+  symbol:   method longueur(java.lang.Double)
+  location: class com.example.livraison.entity.Colis.ColisBuilder
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/mapper/ColisMapper.java:[37,14] cannot find symbol
+  symbol:   method setLongueur(java.lang.Double)
+  location: variable colis of type com.example.livraison.entity.Colis
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/mapper/ColisMapper.java:[38,14] cannot find symbol
+  symbol:   method setLargeur(java.lang.Double)
+  location: variable colis of type com.example.livraison.entity.Colis
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/mapper/ColisMapper.java:[39,14] cannot find symbol
+  symbol:   method setHauteur(java.lang.Double)
+  location: variable colis of type com.example.livraison.entity.Colis
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/mapper/LivraisonMapper.java:[25,74] cannot find symbol
+  symbol:   method getReference()
+  location: class com.example.livraison.entity.Commande
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/mapper/PaiementMapper.java:[15,72] cannot find symbol
+  symbol:   method getReference()
+  location: class com.example.livraison.entity.Commande
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/mapper/UserMapper.java:[16,16] incompatible types: inference variable T has incompatible bounds
+    equality constraints: java.lang.String
+    lower bounds: java.lang.Object
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/mapper/UserMapper.java:[21,58] cannot find symbol
+  symbol:   method getName()
+  location: variable role of type com.example.livraison.entity.Role
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/service/impl/AuthServiceImpl.java:[83,21] cannot find symbol
+  symbol:   method user(com.example.livraison.entity.User)
+  location: class com.example.livraison.entity.Client.ClientBuilder
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/service/impl/AuthServiceImpl.java:[91,21] cannot find symbol
+  symbol:   method disponible(boolean)
+  location: class com.example.livraison.entity.Livreur.LivreurBuilder
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/service/impl/AuthServiceImpl.java:[123,34] cannot find symbol
+  symbol:   method getName()
+  location: variable role of type com.example.livraison.entity.Role
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/service/impl/AuthServiceImpl.java:[124,25] incompatible types: inference variable T has incompatible bounds
+    equality constraints: java.lang.String
+    lower bounds: java.lang.Object
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/service/impl/DashboardServiceImpl.java:[43,64] cannot find symbol
+  symbol:   variable EN_ATTENTE
+  location: class com.example.livraison.entity.StatutCommande
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.13.0:compile (default-compile) on project livraison: Compilation failure: Compilation failure: 
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/dto/request/CommandeRequest.java:[30,51] cannot find symbol
+[ERROR]   symbol:   variable EN_ATTENTE
+[ERROR]   location: class com.example.livraison.entity.StatutCommande
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/entity/User.java:[72,71] cannot find symbol
+[ERROR]   symbol:   method getName()
+[ERROR]   location: variable role of type com.example.livraison.entity.Role
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/mapper/ColisMapper.java:[16,22] cannot find symbol
+[ERROR]   symbol:   method getLongueur()
+[ERROR]   location: variable colis of type com.example.livraison.entity.Colis
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/mapper/ColisMapper.java:[17,22] cannot find symbol
+[ERROR]   symbol:   method getLargeur()
+[ERROR]   location: variable colis of type com.example.livraison.entity.Colis
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/mapper/ColisMapper.java:[18,22] cannot find symbol
+[ERROR]   symbol:   method getHauteur()
+[ERROR]   location: variable colis of type com.example.livraison.entity.Colis
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/mapper/ColisMapper.java:[27,17] cannot find symbol
+[ERROR]   symbol:   method longueur(java.lang.Double)
+[ERROR]   location: class com.example.livraison.entity.Colis.ColisBuilder
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/mapper/ColisMapper.java:[37,14] cannot find symbol
+[ERROR]   symbol:   method setLongueur(java.lang.Double)
+[ERROR]   location: variable colis of type com.example.livraison.entity.Colis
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/mapper/ColisMapper.java:[38,14] cannot find symbol
+[ERROR]   symbol:   method setLargeur(java.lang.Double)
+[ERROR]   location: variable colis of type com.example.livraison.entity.Colis
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/mapper/ColisMapper.java:[39,14] cannot find symbol
+[ERROR]   symbol:   method setHauteur(java.lang.Double)
+[ERROR]   location: variable colis of type com.example.livraison.entity.Colis
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/mapper/LivraisonMapper.java:[25,74] cannot find symbol
+[ERROR]   symbol:   method getReference()
+[ERROR]   location: class com.example.livraison.entity.Commande
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/mapper/PaiementMapper.java:[15,72] cannot find symbol
+[ERROR]   symbol:   method getReference()
+[ERROR]   location: class com.example.livraison.entity.Commande
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/mapper/UserMapper.java:[16,16] incompatible types: inference variable T has incompatible bounds
+[ERROR]     equality constraints: java.lang.String
+[ERROR]     lower bounds: java.lang.Object
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/mapper/UserMapper.java:[21,58] cannot find symbol
+[ERROR]   symbol:   method getName()
+[ERROR]   location: variable role of type com.example.livraison.entity.Role
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/service/impl/AuthServiceImpl.java:[83,21] cannot find symbol
+[ERROR]   symbol:   method user(com.example.livraison.entity.User)
+[ERROR]   location: class com.example.livraison.entity.Client.ClientBuilder
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/service/impl/AuthServiceImpl.java:[91,21] cannot find symbol
+[ERROR]   symbol:   method disponible(boolean)
+[ERROR]   location: class com.example.livraison.entity.Livreur.LivreurBuilder
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/service/impl/AuthServiceImpl.java:[123,34] cannot find symbol
+[ERROR]   symbol:   method getName()
+[ERROR]   location: variable role of type com.example.livraison.entity.Role
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/service/impl/AuthServiceImpl.java:[124,25] incompatible types: inference variable T has incompatible bounds
+[ERROR]     equality constraints: java.lang.String
+[ERROR]     lower bounds: java.lang.Object
+[ERROR] /C:/wamp64/www/AppLivraison/demo/src/main/java/com/example/livraison/service/impl/DashboardServiceImpl.java:[43,64] cannot find symbol
+[ERROR]   symbol:   variable EN_ATTENTE
+[ERROR]   location: class com.example.livraison.entity.StatutCommande
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

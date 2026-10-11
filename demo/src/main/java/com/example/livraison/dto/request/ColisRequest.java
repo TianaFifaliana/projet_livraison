@@ -25,14 +25,8 @@ public class ColisRequest {
     @Positive(message = "Le poids doit etre positif")
     private Double poids;
 
-    @Positive(message = "La longueur doit etre positive")
-    private Double longueur;
-
-    @Positive(message = "La largeur doit etre positive")
-    private Double largeur;
-
-    @Positive(message = "La hauteur doit etre positive")
-    private Double hauteur;
+    @Positive(message = "Le volume doit etre positif")
+    private Double volume;
 
     @Builder.Default
     private boolean fragile = false;

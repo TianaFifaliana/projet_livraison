@@ -1,8 +1,9 @@
 package com.example.livraison.mapper;
 
-import com.example.livraison.dto.request.LivreurRequest;
+import com.example.livraison.dto.request.CreateLivreurRequest;
 import com.example.livraison.dto.response.LivreurResponse;
 import com.example.livraison.entity.Livreur;
+import com.example.livraison.entity.StatutLivreur;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,28 +16,30 @@ public class LivreurMapper {
                 livreur.getPrenom(),
                 livreur.getTelephone(),
                 livreur.getEmail(),
-                livreur.getVehicule(),
-                livreur.isDisponible(),
-                livreur.getUser() != null ? livreur.getUser().getId() : null);
+                livreur.getStatut() != null ? livreur.getStatut().name() : null,
+                livreur.getZone() != null ? livreur.getZone().getId() : null,
+                livreur.getVehicule() != null ? livreur.getVehicule().getId() : null,
+                livreur.getVehicule() != null ? livreur.getVehicule().getImmatriculation() : null,
+                livreur.getUtilisateur() != null ? livreur.getUtilisateur().getId() : null);
     }
 
-    public Livreur toEntity(LivreurRequest request) {
+    public Livreur toEntity(CreateLivreurRequest request) {
         return Livreur.builder()
                 .nom(request.getNom())
                 .prenom(request.getPrenom())
                 .telephone(request.getTelephone())
                 .email(request.getEmail())
-                .vehicule(request.getVehicule())
-                .disponible(request.isDisponible())
+                .statut(request.getStatut() != null ? request.getStatut() : StatutLivreur.DISPONIBLE)
                 .build();
     }
 
-    public void apply(LivreurRequest request, Livreur livreur) {
+    public void apply(CreateLivreurRequest request, Livreur livreur) {
         livreur.setNom(request.getNom());
         livreur.setPrenom(request.getPrenom());
         livreur.setTelephone(request.getTelephone());
         livreur.setEmail(request.getEmail());
-        livreur.setVehicule(request.getVehicule());
-        livreur.setDisponible(request.isDisponible());
+        if (request.getStatut() != null) {
+            livreur.setStatut(request.getStatut());
+        }
     }
 }

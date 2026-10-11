@@ -1,16 +1,23 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="~{fragments/layout :: head('Commande')}"></head>
 <body>
 <nav th:replace="~{fragments/layout :: navbar(${active})}"></nav>
 <div class="container">
     <div th:replace="~{fragments/layout :: alerts}"></div>
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 th:text="'Commande ' + ${commande.reference}">Commande</h2>
+        <h2 th:text="'Commande ' + ${commande.numero}">Commande</h2>
         <div>
-            <a class="btn btn-outline-secondary" th:href="@{'/commandes/' + ${commande.id} + '/edit'}">
+            <a class="btn btn-outline-secondary" sec:authorize="hasAnyRole('ADMIN','MANAGER','OPERATOR')"
+               th:href="@{'/commandes/' + ${commande.id} + '/edit'}">
                 <i class="bi bi-pencil"></i> Modifier
             </a>
+            <form class="d-inline" sec:authorize="hasAnyRole('ADMIN','MANAGER','OPERATOR')"
+                  th:action="@{'/commandes/' + ${commande.id} + '/delete'}" method="post"
+                  onsubmit="return confirm('Supprimer cette commande ?');">
+                <button class="btn btn-outline-danger" type="submit"><i class="bi bi-trash"></i> Supprimer</button>
+            </form>
             <a class="btn btn-secondary" th:href="@{/commandes}">Retour</a>
         </div>
     </div>
@@ -21,61 +28,59 @@
                 <div class="card-header bg-white fw-bold">Informations</div>
                 <div class="card-body">
                     <p><strong>Client :</strong> <span th:text="${commande.clientNom}">client</span></p>
-                    <p><strong>Statut :</strong> <span class="badge text-bg-secondary" th:text="${commande.statut}">statut</span></p>
-                    <p><strong>Montant :</strong> <span th:text="${commande.montantTotal}">0</span></p>
-                    <p><strong>Date :</strong> <span th:text="${commande.dateCommande}">date</span></p>
-                    <p th:if="${commande.adresseLivraison != null}">
-                        <strong>Adresse :</strong>
-                        <span th:text="${commande.adresseLivraison.rue + ', ' + commande.adresseLivraison.codePostal + ' ' + commande.adresseLivraison.ville + ', ' + commande.adresseLivraison.pays}"></span>
+                    <p><strong>Statut :</strong>
+                        <span class="badge"
+                              th:classappend="${commande.statut == 'LIVREE'} ? 'text-bg-success' : (${commande.statut == 'ANNULEE' or commande.statut == 'ECHEC_LIVRAISON' or commande.statut == 'RETOURNEE'} ? 'text-bg-danger' : 'text-bg-secondary')"
+                              th:text="${commande.statut}">statut</span>
                     </p>
-                    <p><strong>Livraison :</strong>
-                        <a th:if="${commande.livraisonId != null}" th:href="@{'/livraisons/' + ${commande.livraisonId}}"
-                           th:text="'#' + ${commande.livraisonId}"></a>
-                        <span th:if="${commande.livraisonId == null}" class="text-muted">Aucune</span>
-                    </p>
+                    <p><strong>Priorite :</strong> <span th:text="${commande.priorite}">priorite</span></p>
+                    <p><strong>Prix :</strong> <span th:text="${commande.prix}">0</span></p>
+                    <p><strong>Enlevement :</strong> <span th:text="${commande.adresseEnlevement}">adresse</span></p>
+                    <p><strong>Livraison :</strong> <span th:text="${commande.adresseLivraison}">adresse</span></p>
+                    <p><strong>Poids :</strong> <span th:text="${commande.poids} + ' kg'">0</span></p>
+                    <p><strong>Volume :</strong> <span th:text="${commande.volume} + ' m³'">0</span></p>
+                    <p><strong>Distance :</strong> <span th:text="${commande.distance} + ' km'">0</span></p>
                 </div>
             </div>
         </div>
         <div class="col-md-6">
             <div class="card h-100">
-                <div class="card-header bg-white fw-bold">Changer le statut</div>
+                <div class="card-header bg-white fw-bold">Dates</div>
                 <div class="card-body">
-                    <form th:action="@{'/commandes/' + ${commande.id} + '/statut'}" method="post" class="row g-2">
-                        <div class="col-8">
-                            <select name="statut" class="form-select">
-                                <option th:each="s : ${statuts}" th:value="${s}" th:text="${s}"
-                                        th:selected="${s.name() == commande.statut}"></option>
-                            </select>
-                        </div>
-                        <div class="col-4">
-                            <button class="btn btn-primary w-100" type="submit">Mettre a jour</button>
-                        </div>
-                    </form>
+                    <p><strong>Date prevue :</strong>
+                        <span th:text="${commande.datePrevue != null} ? ${#temporals.format(commande.datePrevue, 'dd/MM/yyyy HH:mm')} : '-'">-</span>
+                    </p>
+                    <p><strong>Date de creation :</strong>
+                        <span th:text="${commande.dateCreation != null} ? ${#temporals.format(commande.dateCreation, 'dd/MM/yyyy HH:mm')} : '-'">-</span>
+                    </p>
+                    <p><strong>Livreur :</strong>
+                        <span th:if="${commande.livreurId != null}" th:text="${commande.livreurId}"></span>
+                        <span th:if="${commande.livreurId == null}" class="text-muted">Non assigne</span>
+                    </p>
+                    <p><strong>Zone :</strong>
+                        <span th:if="${commande.zoneId != null}" th:text="${commande.zoneId}"></span>
+                        <span th:if="${commande.zoneId == null}" class="text-muted">-</span>
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="card mt-3">
-        <div class="card-header bg-white fw-bold">Colis</div>
-        <div class="table-responsive">
-            <table class="table table-sm mb-0">
-                <thead class="table-light">
-                <tr><th>#</th><th>Description</th><th>Poids</th><th>Dimensions</th><th>Fragile</th></tr>
-                </thead>
-                <tbody>
-                <tr th:each="c : ${commande.colis}">
-                    <td th:text="${c.id}">1</td>
-                    <td th:text="${c.description}">desc</td>
-                    <td th:text="${c.poids} + ' kg'">0</td>
-                    <td th:text="${c.longueur} + ' x ' + ${c.largeur} + ' x ' + ${c.hauteur}">0</td>
-                    <td th:text="${c.fragile} ? 'Oui' : 'Non'">Non</td>
-                </tr>
-                <tr th:if="${#lists.isEmpty(commande.colis)}">
-                    <td colspan="5" class="text-center text-muted py-3">Aucun colis</td>
-                </tr>
-                </tbody>
-            </table>
+        <div class="card-header bg-white fw-bold">Changer le statut</div>
+        <div class="card-body">
+            <form th:action="@{'/commandes/' + ${commande.id} + '/statut'}" method="post" class="row g-2">
+                <div class="col-8">
+                    <select name="statut" class="form-select">
+                        <option th:each="s : ${statuts}" th:value="${s}" th:text="${s}"
+                                th:selected="${s.name() == commande.statut}"></option>
+                    </select>
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-primary w-100" sec:authorize="hasAnyRole('ADMIN','MANAGER','OPERATOR')"
+                            type="submit">Mettre a jour</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

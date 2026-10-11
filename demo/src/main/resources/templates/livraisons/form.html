@@ -15,7 +15,7 @@
                                 th:classappend="${#fields.hasErrors('commandeId')} ? 'is-invalid'">
                             <option value="">-- Selectionner --</option>
                             <option th:each="c : ${commandes}" th:value="${c.id}"
-                                    th:text="${c.reference + ' - ' + c.clientNom}"></option>
+                                    th:text="${c.numero + ' - ' + c.clientNom}"></option>
                         </select>
                         <div class="invalid-feedback" th:errors="*{commandeId}"></div>
                     </div>

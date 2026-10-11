@@ -38,6 +38,20 @@ public class Tarif {
     @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal prixParKm;
 
+    @Column(precision = 12, scale = 4)
+    private BigDecimal prixParKg;
+
+    @Column(precision = 12, scale = 4)
+    private BigDecimal prixParM3;
+
+    @Builder.Default
+    @Column(precision = 6, scale = 4)
+    private BigDecimal coefficientZone = BigDecimal.ONE;
+
+    @Builder.Default
+    @Column
+    private Boolean parDefaut = false;
+
     @Column
     private Double poidsMax;
 

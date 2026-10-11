@@ -22,7 +22,7 @@ public class LivraisonMapper {
         return new LivraisonResponse(
                 livraison.getId(),
                 livraison.getCommande() != null ? livraison.getCommande().getId() : null,
-                livraison.getCommande() != null ? livraison.getCommande().getReference() : null,
+                livraison.getCommande() != null ? livraison.getCommande().getNumero() : null,
                 livraison.getLivreur() != null ? livraison.getLivreur().getId() : null,
                 livraison.getLivreur() != null
                         ? livraison.getLivreur().getPrenom() + " " + livraison.getLivreur().getNom()

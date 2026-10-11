@@ -4,5 +4,7 @@ public enum Role {
     ADMIN,
     MANAGER,
     OPERATOR,
-    USER
+    USER,
+    CLIENT,
+    LIVREUR
 }

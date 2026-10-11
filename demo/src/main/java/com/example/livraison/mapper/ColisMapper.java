@@ -13,9 +13,7 @@ public class ColisMapper {
                 colis.getId(),
                 colis.getDescription(),
                 colis.getPoids(),
-                colis.getLongueur(),
-                colis.getLargeur(),
-                colis.getHauteur(),
+                colis.getVolume(),
                 colis.isFragile(),
                 colis.getCommande() != null ? colis.getCommande().getId() : null);
     }
@@ -24,9 +22,7 @@ public class ColisMapper {
         return Colis.builder()
                 .description(request.getDescription())
                 .poids(request.getPoids())
-                .longueur(request.getLongueur())
-                .largeur(request.getLargeur())
-                .hauteur(request.getHauteur())
+                .volume(request.getVolume())
                 .fragile(request.isFragile())
                 .build();
     }
@@ -34,9 +30,7 @@ public class ColisMapper {
     public void apply(ColisRequest request, Colis colis) {
         colis.setDescription(request.getDescription());
         colis.setPoids(request.getPoids());
-        colis.setLongueur(request.getLongueur());
-        colis.setLargeur(request.getLargeur());
-        colis.setHauteur(request.getHauteur());
+        colis.setVolume(request.getVolume());
         colis.setFragile(request.isFragile());
     }
 }

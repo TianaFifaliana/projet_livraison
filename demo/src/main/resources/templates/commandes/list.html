@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="~{fragments/layout :: head('Commandes')}"></head>
 <body>
 <nav th:replace="~{fragments/layout :: navbar(${active})}"></nav>
@@ -7,41 +8,116 @@
     <div th:replace="~{fragments/layout :: alerts}"></div>
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Commandes</h2>
-        <a class="btn btn-primary" th:href="@{/commandes/new}"><i class="bi bi-plus-lg"></i> Nouvelle commande</a>
+        <a class="btn btn-primary" sec:authorize="hasAnyRole('ADMIN','MANAGER','OPERATOR')"
+           th:href="@{/commandes/new}"><i class="bi bi-plus-lg"></i> Nouvelle commande</a>
     </div>
+
+    <form method="get" th:action="@{/commandes}" class="card mb-3">
+        <div class="card-body">
+            <div class="row g-2">
+                <div class="col-md-2">
+                    <select name="statut" class="form-select">
+                        <option value="">Tous les statuts</option>
+                        <option th:each="s : ${statuts}" th:value="${s}" th:text="${s}"
+                                th:selected="${statut != null and statut == s}"></option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="clientId" class="form-select">
+                        <option value="">Tous les clients</option>
+                        <option th:each="cl : ${clients}" th:value="${cl.id}"
+                                th:text="${cl.prenom + ' ' + cl.nom}"
+                                th:selected="${clientId != null and clientId == cl.id}"></option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="livreurId" class="form-select">
+                        <option value="">Tous les livreurs</option>
+                        <option th:each="lv : ${livreurs}" th:value="${lv.id}"
+                                th:text="${lv.prenom + ' ' + lv.nom}"
+                                th:selected="${livreurId != null and livreurId == lv.id}"></option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="priorite" class="form-select">
+                        <option value="">Toutes priorites</option>
+                        <option th:each="p : ${priorites}" th:value="${p}" th:text="${p}"
+                                th:selected="${priorite != null and priorite == p}"></option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <input type="datetime-local" name="dateDebut" class="form-control" placeholder="Debut"
+                           th:value="${dateDebut != null} ? ${#temporals.format(dateDebut, 'yyyy-MM-dd\'T\'HH:mm')} : ''"/>
+                </div>
+                <div class="col-md-2">
+                    <div class="d-flex gap-2">
+                        <input type="datetime-local" name="dateFin" class="form-control" placeholder="Fin"
+                               th:value="${dateFin != null} ? ${#temporals.format(dateFin, 'yyyy-MM-dd\'T\'HH:mm')} : ''"/>
+                        <button class="btn btn-primary text-nowrap" type="submit">Filtrer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
     <div class="card">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-light">
                 <tr>
-                    <th>Reference</th><th>Client</th><th>Adresse</th><th>Statut</th>
-                    <th class="text-end">Montant</th><th class="text-end">Actions</th>
+                    <th>Numero</th><th>Client</th><th>Adresse livraison</th><th>Statut</th>
+                    <th class="text-end">Prix</th><th class="text-end">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="c : ${commandes}">
-                    <td><a th:href="@{'/commandes/' + ${c.id}}" th:text="${c.reference}">ref</a></td>
+                    <td><a th:href="@{'/commandes/' + ${c.id}}" th:text="${c.numero}">ref</a></td>
                     <td th:text="${c.clientNom}">client</td>
-                    <td th:text="${c.adresseLivraison != null} ? ${c.adresseLivraison.ville} : '-'">ville</td>
-                    <td><span class="badge text-bg-secondary" th:text="${c.statut}">statut</span></td>
-                    <td class="text-end" th:text="${c.montantTotal}">0</td>
+                    <td th:text="${c.adresseLivraison}">adresse</td>
+                    <td>
+                        <span class="badge"
+                              th:classappend="${c.statut == 'LIVREE'} ? 'text-bg-success' : (${c.statut == 'ANNULEE' or c.statut == 'ECHEC_LIVRAISON' or c.statut == 'RETOURNEE'} ? 'text-bg-danger' : 'text-bg-secondary')"
+                              th:text="${c.statut}">statut</span>
+                    </td>
+                    <td class="text-end" th:text="${c.prix}">0</td>
                     <td class="text-end">
-                        <a class="btn btn-sm btn-outline-secondary" th:href="@{'/commandes/' + ${c.id} + '/edit'}">
+                        <a class="btn btn-sm btn-outline-secondary"
+                           sec:authorize="hasAnyRole('ADMIN','MANAGER','OPERATOR')"
+                           th:href="@{'/commandes/' + ${c.id} + '/edit'}">
                             <i class="bi bi-pencil"></i>
                         </a>
-                        <form class="d-inline" th:action="@{'/commandes/' + ${c.id} + '/delete'}" method="post"
+                        <form class="d-inline" sec:authorize="hasAnyRole('ADMIN','MANAGER','OPERATOR')"
+                              th:action="@{'/commandes/' + ${c.id} + '/delete'}" method="post"
                               onsubmit="return confirm('Supprimer cette commande ?');">
                             <button class="btn btn-sm btn-outline-danger" type="submit"><i class="bi bi-trash"></i></button>
                         </form>
                     </td>
                 </tr>
-                <tr th:if="${#lists.isEmpty(commandes)}">
+                <tr th:if="${commandes.empty}">
                     <td colspan="6" class="text-center text-muted py-4">Aucune commande enregistree</td>
                 </tr>
                 </tbody>
             </table>
         </div>
     </div>
+
+    <nav th:if="${page.totalPages > 1}" class="mt-3" aria-label="Pagination">
+        <ul class="pagination">
+            <li class="page-item" th:classappend="${page.first} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{/commandes(page=${page.number - 1}, statut=${statut}, clientId=${clientId}, livreurId=${livreurId}, priorite=${priorite}, dateDebut=${dateDebut}, dateFin=${dateFin})}">
+                    Precedent
+                </a>
+            </li>
+            <li class="page-item disabled"><span class="page-link" th:text="${page.number + 1} + ' / ' + ${page.totalPages}">1 / 1</span></li>
+            <li class="page-item" th:classappend="${page.last} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{/commandes(page=${page.number + 1}, statut=${statut}, clientId=${clientId}, livreurId=${livreurId}, priorite=${priorite}, dateDebut=${dateDebut}, dateFin=${dateFin})}">
+                    Suivant
+                </a>
+            </li>
+        </ul>
+    </nav>
 </div>
 <footer th:replace="~{fragments/layout :: footer}"></footer>
 </body>

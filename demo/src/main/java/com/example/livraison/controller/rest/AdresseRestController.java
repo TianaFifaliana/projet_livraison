@@ -53,7 +53,7 @@ public class AdresseRestController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         adresseService.delete(id);
         return ResponseEntity.noContent().build();

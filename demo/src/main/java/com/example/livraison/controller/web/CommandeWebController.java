@@ -1,15 +1,20 @@
 package com.example.livraison.controller.web;
 
-import com.example.livraison.dto.request.ColisRequest;
-import com.example.livraison.dto.request.CommandeRequest;
+import com.example.livraison.dto.request.CreateCommandeRequest;
+import com.example.livraison.dto.request.UpdateCommandeRequest;
 import com.example.livraison.dto.response.CommandeResponse;
+import com.example.livraison.entity.Priorite;
 import com.example.livraison.entity.StatutCommande;
-import com.example.livraison.service.AdresseService;
 import com.example.livraison.service.ClientService;
 import com.example.livraison.service.CommandeService;
+import com.example.livraison.service.LivreurService;
 import jakarta.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,30 +32,54 @@ public class CommandeWebController {
 
     private final CommandeService commandeService;
     private final ClientService clientService;
-    private final AdresseService adresseService;
+    private final LivreurService livreurService;
 
     public CommandeWebController(CommandeService commandeService, ClientService clientService,
-                                 AdresseService adresseService) {
+                                 LivreurService livreurService) {
         this.commandeService = commandeService;
         this.clientService = clientService;
-        this.adresseService = adresseService;
+        this.livreurService = livreurService;
     }
 
     @GetMapping
-    public String list(Model model) {
-        model.addAttribute("commandes", commandeService.getAll());
+    public String list(
+            @RequestParam(required = false) StatutCommande statut,
+            @RequestParam(required = false) Long clientId,
+            @RequestParam(required = false) Long livreurId,
+            @RequestParam(required = false) Priorite priorite,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateDebut,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateFin,
+            @RequestParam(defaultValue = "0") int page,
+            Model model) {
+        int size = 10;
+        Page<CommandeResponse> result = commandeService.rechercher(
+                statut, clientId, livreurId, priorite, dateDebut, dateFin,
+                PageRequest.of(Math.max(page, 0), size, Sort.by(Sort.Direction.DESC, "dateCreation")));
+        model.addAttribute("commandes", result);
+        model.addAttribute("page", result);
+        model.addAttribute("statut", statut);
+        model.addAttribute("clientId", clientId);
+        model.addAttribute("livreurId", livreurId);
+        model.addAttribute("priorite", priorite);
+        model.addAttribute("dateDebut", dateDebut);
+        model.addAttribute("dateFin", dateFin);
         model.addAttribute("statuts", StatutCommande.values());
+        model.addAttribute("priorites", Priorite.values());
+        model.addAttribute("clients", clientService.getAll());
+        model.addAttribute("livreurs", livreurService.getAll());
         model.addAttribute("active", "commandes");
         return "commandes/list";
     }
 
     @GetMapping("/new")
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','OPERATOR')")
     public String createForm(Model model) {
-        CommandeRequest request = CommandeRequest.builder()
-                .statut(StatutCommande.EN_ATTENTE)
-                .colis(new ArrayList<>(List.of(new ColisRequest())))
-                .build();
-        model.addAttribute("commandeRequest", request);
+        model.addAttribute("commandeRequest", CreateCommandeRequest.builder()
+                .statut(StatutCommande.CREEE)
+                .priorite(Priorite.NORMALE)
+                .build());
         populateForm(model);
         model.addAttribute("editMode", false);
         model.addAttribute("active", "commandes");
@@ -58,7 +87,8 @@ public class CommandeWebController {
     }
 
     @PostMapping
-    public String create(@Valid @ModelAttribute("commandeRequest") CommandeRequest request,
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','OPERATOR')")
+    public String create(@Valid @ModelAttribute("commandeRequest") CreateCommandeRequest request,
                          BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             populateForm(model);
@@ -80,23 +110,22 @@ public class CommandeWebController {
     }
 
     @GetMapping("/{id}/edit")
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','OPERATOR')")
     public String editForm(@PathVariable Long id, Model model) {
         CommandeResponse commande = commandeService.getById(id);
-        CommandeRequest request = CommandeRequest.builder()
+        UpdateCommandeRequest request = UpdateCommandeRequest.builder()
                 .clientId(commande.clientId())
-                .adresseId(commande.adresseLivraison() != null ? commande.adresseLivraison().id() : null)
+                .adresseEnlevement(commande.adresseEnlevement())
+                .adresseLivraison(commande.adresseLivraison())
+                .poids(commande.poids())
+                .volume(commande.volume())
+                .priorite(Priorite.valueOf(commande.priorite()))
+                .distance(commande.distance())
+                .prix(commande.prix())
+                .datePrevue(commande.datePrevue())
                 .statut(StatutCommande.valueOf(commande.statut()))
-                .montantTotal(commande.montantTotal())
-                .colis(commande.colis().stream()
-                        .map(c -> ColisRequest.builder()
-                                .description(c.description())
-                                .poids(c.poids())
-                                .longueur(c.longueur())
-                                .largeur(c.largeur())
-                                .hauteur(c.hauteur())
-                                .fragile(c.fragile())
-                                .build())
-                        .toList())
+                .livreurId(commande.livreurId())
+                .zoneId(commande.zoneId())
                 .build();
         model.addAttribute("commandeRequest", request);
         model.addAttribute("commandeId", id);
@@ -107,7 +136,8 @@ public class CommandeWebController {
     }
 
     @PostMapping("/{id}")
-    public String update(@PathVariable Long id, @Valid @ModelAttribute("commandeRequest") CommandeRequest request,
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','OPERATOR')")
+    public String update(@PathVariable Long id, @Valid @ModelAttribute("commandeRequest") UpdateCommandeRequest request,
                          BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("commandeId", id);
@@ -118,18 +148,20 @@ public class CommandeWebController {
         }
         commandeService.update(id, request);
         redirectAttributes.addFlashAttribute("successMessage", "Commande mise a jour avec succes.");
-        return "redirect:/commandes";
+        return "redirect:/commandes/" + id;
     }
 
     @PostMapping("/{id}/statut")
-    public String updateStatut(@PathVariable Long id, @RequestParam StatutCommande statut,
-                               RedirectAttributes redirectAttributes) {
-        commandeService.updateStatut(id, statut);
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','OPERATOR')")
+    public String changerStatut(@PathVariable Long id, @RequestParam StatutCommande statut,
+                                RedirectAttributes redirectAttributes) {
+        commandeService.changerStatut(id, statut);
         redirectAttributes.addFlashAttribute("successMessage", "Statut de la commande mis a jour.");
         return "redirect:/commandes/" + id;
     }
 
     @PostMapping("/{id}/delete")
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','OPERATOR')")
     public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         commandeService.delete(id);
         redirectAttributes.addFlashAttribute("successMessage", "Commande supprimee.");
@@ -138,7 +170,8 @@ public class CommandeWebController {
 
     private void populateForm(Model model) {
         model.addAttribute("clients", clientService.getAll());
-        model.addAttribute("adresses", adresseService.getAll());
+        model.addAttribute("livreurs", livreurService.getAll());
         model.addAttribute("statuts", StatutCommande.values());
+        model.addAttribute("priorites", Priorite.values());
     }
 }

@@ -1,6 +1,6 @@
 package com.example.livraison.controller.web;
 
-import com.example.livraison.dto.request.ClientRequest;
+import com.example.livraison.dto.request.CreateClientRequest;
 import com.example.livraison.dto.response.ClientResponse;
 import com.example.livraison.service.ClientService;
 import com.example.livraison.service.UserService;
@@ -18,7 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/clients")
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
 public class ClientWebController {
 
     private final ClientService clientService;
@@ -38,7 +38,7 @@ public class ClientWebController {
 
     @GetMapping("/new")
     public String createForm(Model model) {
-        model.addAttribute("clientRequest", new ClientRequest());
+        model.addAttribute("clientRequest", new CreateClientRequest());
         model.addAttribute("users", userService.getAll());
         model.addAttribute("editMode", false);
         model.addAttribute("active", "clients");
@@ -46,7 +46,7 @@ public class ClientWebController {
     }
 
     @PostMapping
-    public String create(@Valid @ModelAttribute("clientRequest") ClientRequest request,
+    public String create(@Valid @ModelAttribute("clientRequest") CreateClientRequest request,
                          BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("users", userService.getAll());
@@ -62,12 +62,13 @@ public class ClientWebController {
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Long id, Model model) {
         ClientResponse client = clientService.getById(id);
-        ClientRequest request = ClientRequest.builder()
+        CreateClientRequest request = CreateClientRequest.builder()
                 .nom(client.nom())
                 .prenom(client.prenom())
                 .telephone(client.telephone())
                 .email(client.email())
-                .userId(client.userId())
+                .adresse(client.adresse())
+                .utilisateurId(client.utilisateurId())
                 .build();
         model.addAttribute("clientRequest", request);
         model.addAttribute("clientId", id);
@@ -78,7 +79,7 @@ public class ClientWebController {
     }
 
     @PostMapping("/{id}")
-    public String update(@PathVariable Long id, @Valid @ModelAttribute("clientRequest") ClientRequest request,
+    public String update(@PathVariable Long id, @Valid @ModelAttribute("clientRequest") CreateClientRequest request,
                          BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("clientId", id);

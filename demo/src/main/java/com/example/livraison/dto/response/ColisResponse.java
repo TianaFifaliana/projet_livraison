@@ -4,9 +4,7 @@ public record ColisResponse(
         Long id,
         String description,
         Double poids,
-        Double longueur,
-        Double largeur,
-        Double hauteur,
+        Double volume,
         boolean fragile,
         Long commandeId) {
 }

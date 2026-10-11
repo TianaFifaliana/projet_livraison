@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${editMode} ? 'Modifier tarif' : 'Nouveau tarif')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar(${active})}"></nav>
+<div class="container">
+    <h2 class="mb-3" th:text="${editMode} ? 'Modifier le tarif' : 'Nouveau tarif'">Tarif</h2>
+    <div class="card">
+        <div class="card-body">
+            <form th:action="${editMode} ? @{'/tarifs/' + ${tarifId}} : @{/tarifs}"
+                  th:object="${tarifRequest}" method="post">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" for="libelle">Libelle</label>
+                        <input type="text" id="libelle" th:field="*{libelle}" class="form-control"
+                               th:classappend="${#fields.hasErrors('libelle')} ? 'is-invalid'"/>
+                        <div class="invalid-feedback" th:errors="*{libelle}"></div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" for="prixBase">Prix de base</label>
+                        <input type="number" step="0.01" id="prixBase" th:field="*{prixBase}" class="form-control"
+                               th:classappend="${#fields.hasErrors('prixBase')} ? 'is-invalid'"/>
+                        <div class="invalid-feedback" th:errors="*{prixBase}"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label" for="prixParKm">Prix par km</label>
+                        <input type="number" step="0.01" id="prixParKm" th:field="*{prixParKm}" class="form-control"
+                               th:classappend="${#fields.hasErrors('prixParKm')} ? 'is-invalid'"/>
+                        <div class="invalid-feedback" th:errors="*{prixParKm}"></div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label" for="prixParKg">Prix par kg</label>
+                        <input type="number" step="0.01" id="prixParKg" th:field="*{prixParKg}" class="form-control"/>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label" for="prixParM3">Prix par m3</label>
+                        <input type="number" step="0.01" id="prixParM3" th:field="*{prixParM3}" class="form-control"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" for="poidsMax">Poids max</label>
+                        <input type="number" step="0.01" id="poidsMax" th:field="*{poidsMax}" class="form-control"/>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" for="zoneId">Zone</label>
+                        <input type="number" id="zoneId" th:field="*{zoneId}" class="form-control"/>
+                    </div>
+                </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="parDefaut" th:field="*{parDefaut}"/>
+                    <label class="form-check-label" for="parDefaut">Tarif par defaut</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
+                <a class="btn btn-secondary" th:href="@{/tarifs}">Annuler</a>
+            </form>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

@@ -21,53 +21,68 @@
                         <div class="invalid-feedback" th:errors="*{clientId}"></div>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label class="form-label" for="adresseId">Adresse de livraison</label>
-                        <select id="adresseId" th:field="*{adresseId}" class="form-select"
-                                th:classappend="${#fields.hasErrors('adresseId')} ? 'is-invalid'">
-                            <option value="">-- Selectionner --</option>
-                            <option th:each="a : ${adresses}" th:value="${a.id}"
-                                    th:text="${a.rue + ', ' + a.ville}"></option>
+                        <label class="form-label" for="livreurId">Livreur (optionnel)</label>
+                        <select id="livreurId" th:field="*{livreurId}" class="form-select">
+                            <option value="">-- Aucun --</option>
+                            <option th:each="lv : ${livreurs}" th:value="${lv.id}"
+                                    th:text="${lv.prenom + ' ' + lv.nom}"></option>
                         </select>
-                        <div class="invalid-feedback" th:errors="*{adresseId}"></div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label class="form-label" for="montantTotal">Montant total</label>
-                        <input type="number" step="0.01" id="montantTotal" th:field="*{montantTotal}"
-                               class="form-control" th:classappend="${#fields.hasErrors('montantTotal')} ? 'is-invalid'"/>
-                        <div class="invalid-feedback" th:errors="*{montantTotal}"></div>
+                        <label class="form-label" for="adresseEnlevement">Adresse d'enlevement</label>
+                        <input type="text" id="adresseEnlevement" th:field="*{adresseEnlevement}" class="form-control"
+                               th:classappend="${#fields.hasErrors('adresseEnlevement')} ? 'is-invalid'"/>
+                        <div class="invalid-feedback" th:errors="*{adresseEnlevement}"></div>
                     </div>
                     <div class="col-md-6 mb-3">
+                        <label class="form-label" for="adresseLivraison">Adresse de livraison</label>
+                        <input type="text" id="adresseLivraison" th:field="*{adresseLivraison}" class="form-control"
+                               th:classappend="${#fields.hasErrors('adresseLivraison')} ? 'is-invalid'"/>
+                        <div class="invalid-feedback" th:errors="*{adresseLivraison}"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label" for="poids">Poids (kg)</label>
+                        <input type="number" step="0.01" id="poids" th:field="*{poids}" class="form-control"/>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label" for="volume">Volume (m³)</label>
+                        <input type="number" step="0.01" id="volume" th:field="*{volume}" class="form-control"/>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label" for="distance">Distance (km)</label>
+                        <input type="number" step="0.01" id="distance" th:field="*{distance}" class="form-control"/>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label" for="prix">Prix</label>
+                        <input type="number" step="0.01" id="prix" th:field="*{prix}" class="form-control"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label" for="priorite">Priorite</label>
+                        <select id="priorite" th:field="*{priorite}" class="form-select">
+                            <option th:each="p : ${priorites}" th:value="${p}" th:text="${p}"></option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3">
                         <label class="form-label" for="statut">Statut</label>
                         <select id="statut" th:field="*{statut}" class="form-select">
                             <option th:each="s : ${statuts}" th:value="${s}" th:text="${s}"></option>
                         </select>
                     </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label" for="zoneId">Zone</label>
+                        <input type="number" id="zoneId" th:field="*{zoneId}" class="form-control"/>
+                    </div>
                 </div>
-
-                <h5 class="mt-2">Colis</h5>
-                <div class="table-responsive">
-                    <table class="table table-sm align-middle">
-                        <thead class="table-light">
-                        <tr>
-                            <th>Description</th><th>Poids (kg)</th><th>L (cm)</th><th>l (cm)</th><th>H (cm)</th><th>Fragile</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="c, stat : *{colis}">
-                            <td><input class="form-control form-control-sm" th:field="*{colis[__${stat.index}__].description}"/></td>
-                            <td><input type="number" step="0.01" class="form-control form-control-sm" th:field="*{colis[__${stat.index}__].poids}"/></td>
-                            <td><input type="number" step="0.1" class="form-control form-control-sm" th:field="*{colis[__${stat.index}__].longueur}"/></td>
-                            <td><input type="number" step="0.1" class="form-control form-control-sm" th:field="*{colis[__${stat.index}__].largeur}"/></td>
-                            <td><input type="number" step="0.1" class="form-control form-control-sm" th:field="*{colis[__${stat.index}__].hauteur}"/></td>
-                            <td class="text-center"><input type="checkbox" class="form-check-input" th:field="*{colis[__${stat.index}__].fragile}"/></td>
-                        </tr>
-                        </tbody>
-                    </table>
+                <div class="mb-3">
+                    <label class="form-label" for="datePrevue">Date prevue</label>
+                    <input type="datetime-local" id="datePrevue" th:field="*{datePrevue}" class="form-control"/>
                 </div>
-                <p class="text-muted small">Un seul colis est editable via ce formulaire ; la liste des colis peut aussi etre geree via l'API REST.</p>
-
                 <button type="submit" class="btn btn-primary">Enregistrer</button>
                 <a class="btn btn-secondary" th:href="@{/commandes}">Annuler</a>
             </form>

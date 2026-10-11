@@ -1,7 +1,8 @@
 package com.example.livraison.controller.web;
 
-import com.example.livraison.dto.request.LivreurRequest;
+import com.example.livraison.dto.request.CreateLivreurRequest;
 import com.example.livraison.dto.response.LivreurResponse;
+import com.example.livraison.entity.StatutLivreur;
 import com.example.livraison.service.LivreurService;
 import com.example.livraison.service.UserService;
 import jakarta.validation.Valid;
@@ -18,7 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/livreurs")
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
 public class LivreurWebController {
 
     private final LivreurService livreurService;
@@ -38,18 +39,20 @@ public class LivreurWebController {
 
     @GetMapping("/new")
     public String createForm(Model model) {
-        model.addAttribute("livreurRequest", LivreurRequest.builder().disponible(true).build());
-        model.addAttribute("users", userService.getAll());
+        model.addAttribute("livreurRequest", CreateLivreurRequest.builder()
+                .statut(StatutLivreur.DISPONIBLE)
+                .build());
+        populateForm(model);
         model.addAttribute("editMode", false);
         model.addAttribute("active", "livreurs");
         return "livreurs/form";
     }
 
     @PostMapping
-    public String create(@Valid @ModelAttribute("livreurRequest") LivreurRequest request,
+    public String create(@Valid @ModelAttribute("livreurRequest") CreateLivreurRequest request,
                          BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("users", userService.getAll());
+            populateForm(model);
             model.addAttribute("editMode", false);
             model.addAttribute("active", "livreurs");
             return "livreurs/form";
@@ -62,29 +65,30 @@ public class LivreurWebController {
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Long id, Model model) {
         LivreurResponse livreur = livreurService.getById(id);
-        LivreurRequest request = LivreurRequest.builder()
+        CreateLivreurRequest request = CreateLivreurRequest.builder()
                 .nom(livreur.nom())
                 .prenom(livreur.prenom())
                 .telephone(livreur.telephone())
                 .email(livreur.email())
-                .vehicule(livreur.vehicule())
-                .disponible(livreur.disponible())
-                .userId(livreur.userId())
+                .statut(StatutLivreur.valueOf(livreur.statut()))
+                .zoneId(livreur.zoneId())
+                .vehiculeId(livreur.vehiculeId())
+                .utilisateurId(livreur.utilisateurId())
                 .build();
         model.addAttribute("livreurRequest", request);
         model.addAttribute("livreurId", id);
-        model.addAttribute("users", userService.getAll());
+        populateForm(model);
         model.addAttribute("editMode", true);
         model.addAttribute("active", "livreurs");
         return "livreurs/form";
     }
 
     @PostMapping("/{id}")
-    public String update(@PathVariable Long id, @Valid @ModelAttribute("livreurRequest") LivreurRequest request,
+    public String update(@PathVariable Long id, @Valid @ModelAttribute("livreurRequest") CreateLivreurRequest request,
                          BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("livreurId", id);
-            model.addAttribute("users", userService.getAll());
+            populateForm(model);
             model.addAttribute("editMode", true);
             model.addAttribute("active", "livreurs");
             return "livreurs/form";
@@ -99,5 +103,10 @@ public class LivreurWebController {
         livreurService.delete(id);
         redirectAttributes.addFlashAttribute("successMessage", "Livreur supprime.");
         return "redirect:/livreurs";
+    }
+
+    private void populateForm(Model model) {
+        model.addAttribute("users", userService.getAll());
+        model.addAttribute("statuts", StatutLivreur.values());
     }
 }

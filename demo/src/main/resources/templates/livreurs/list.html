@@ -14,7 +14,7 @@
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-light">
                 <tr>
-                    <th>#</th><th>Nom</th><th>Prenom</th><th>Email</th><th>Vehicule</th><th>Disponible</th>
+                    <th>#</th><th>Nom</th><th>Prenom</th><th>Email</th><th>Telephone</th><th>Vehicule</th><th>Statut</th>
                     <th class="text-end">Actions</th>
                 </tr>
                 </thead>
@@ -24,10 +24,12 @@
                     <td th:text="${l.nom}">nom</td>
                     <td th:text="${l.prenom}">prenom</td>
                     <td th:text="${l.email}">email</td>
-                    <td th:text="${l.vehicule}">vehicule</td>
+                    <td th:text="${l.telephone}">tel</td>
+                    <td th:text="${l.vehiculeImmatriculation} ?: '-'">vehicule</td>
                     <td>
-                        <span class="badge" th:classappend="${l.disponible} ? 'text-bg-success' : 'text-bg-secondary'"
-                              th:text="${l.disponible} ? 'Oui' : 'Non'">Oui</span>
+                        <span class="badge"
+                              th:classappend="${l.statut == 'DISPONIBLE'} ? 'text-bg-success' : (${l.statut == 'INDISPONIBLE'} ? 'text-bg-danger' : 'text-bg-warning')"
+                              th:text="${l.statut}">statut</span>
                     </td>
                     <td class="text-end">
                         <a class="btn btn-sm btn-outline-secondary" th:href="@{'/livreurs/' + ${l.id} + '/edit'}">
@@ -40,7 +42,7 @@
                     </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(livreurs)}">
-                    <td colspan="7" class="text-center text-muted py-4">Aucun livreur enregistre</td>
+                    <td colspan="8" class="text-center text-muted py-4">Aucun livreur enregistre</td>
                 </tr>
                 </tbody>
             </table>

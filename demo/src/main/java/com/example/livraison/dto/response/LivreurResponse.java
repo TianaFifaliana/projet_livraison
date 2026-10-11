@@ -6,7 +6,9 @@ public record LivreurResponse(
         String prenom,
         String telephone,
         String email,
-        String vehicule,
-        boolean disponible,
-        Long userId) {
+        String statut,
+        Long zoneId,
+        Long vehiculeId,
+        String vehiculeImmatriculation,
+        Long utilisateurId) {
 }
