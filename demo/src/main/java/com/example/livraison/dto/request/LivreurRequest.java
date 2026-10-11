@@ -35,8 +35,5 @@ public class LivreurRequest {
     @Size(max = 40)
     private String vehicule;
 
-    @Builder.Default
-    private boolean disponible = true;
-
     private Long userId;
 }

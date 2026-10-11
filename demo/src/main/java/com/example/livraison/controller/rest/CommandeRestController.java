@@ -2,6 +2,7 @@ package com.example.livraison.controller.rest;
 
 import com.example.livraison.dto.request.CreateCommandeRequest;
 import com.example.livraison.dto.request.UpdateCommandeRequest;
+import com.example.livraison.dto.request.ValidationGroups;
 import com.example.livraison.dto.response.CommandeResponse;
 import com.example.livraison.entity.Priorite;
 import com.example.livraison.entity.StatutCommande;
@@ -16,6 +17,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -56,7 +58,8 @@ public class CommandeRestController {
     }
 
     @PostMapping
-    public ResponseEntity<CommandeResponse> create(@Valid @RequestBody CreateCommandeRequest request) {
+    public ResponseEntity<CommandeResponse> create(
+            @Validated(ValidationGroups.Api.class) @RequestBody CreateCommandeRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(commandeService.create(request));
     }
 

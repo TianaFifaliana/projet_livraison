@@ -2,6 +2,7 @@ package com.example.livraison.controller.web;
 
 import com.example.livraison.dto.request.CreateCommandeRequest;
 import com.example.livraison.dto.request.UpdateCommandeRequest;
+import com.example.livraison.dto.request.ValidationGroups;
 import com.example.livraison.dto.response.CommandeResponse;
 import com.example.livraison.entity.Priorite;
 import com.example.livraison.entity.StatutCommande;
@@ -18,6 +19,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -88,7 +90,8 @@ public class CommandeWebController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER','OPERATOR')")
-    public String create(@Valid @ModelAttribute("commandeRequest") CreateCommandeRequest request,
+    public String create(@Validated(ValidationGroups.Web.class) @ModelAttribute("commandeRequest")
+                         CreateCommandeRequest request,
                          BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             populateForm(model);
@@ -129,6 +132,7 @@ public class CommandeWebController {
                 .build();
         model.addAttribute("commandeRequest", request);
         model.addAttribute("commandeId", id);
+        model.addAttribute("clientNom", commande.clientNom());
         populateForm(model);
         model.addAttribute("editMode", true);
         model.addAttribute("active", "commandes");
@@ -169,7 +173,6 @@ public class CommandeWebController {
     }
 
     private void populateForm(Model model) {
-        model.addAttribute("clients", clientService.getAll());
         model.addAttribute("livreurs", livreurService.getAll());
         model.addAttribute("statuts", StatutCommande.values());
         model.addAttribute("priorites", Priorite.values());

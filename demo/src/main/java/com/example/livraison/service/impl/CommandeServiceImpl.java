@@ -64,7 +64,7 @@ public class CommandeServiceImpl implements CommandeService {
         Commande commande = commandeMapper.toEntity(request);
         commande.setNumero(genererNumeroUnique());
         commande.setStatut(StatutCommande.CREEE);
-        commande.setClient(resolveClient(request.getClientId()));
+        commande.setClient(resolveOrCreateClient(request));
         commande.setLivreur(resolveLivreur(request.getLivreurId()));
         Zone zone = resolveZone(request.getZoneId());
         commande.setZone(zone);
@@ -193,6 +193,35 @@ public class CommandeServiceImpl implements CommandeService {
 
     private Commande findCommande(Long id) {
         return commandeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Commande", id));
+    }
+
+    private Client resolveOrCreateClient(CreateCommandeRequest request) {
+        if (request.getClientId() != null) {
+            return resolveClient(request.getClientId());
+        }
+        if (request.getClientEmail() == null || request.getClientEmail().isBlank()) {
+            throw new BusinessException("Les informations du client sont obligatoires");
+        }
+        return clientRepository.findByEmail(request.getClientEmail())
+                .map(client -> mettreAJourClient(client, request))
+                .orElseGet(() -> {
+                    Client client = Client.builder()
+                            .nom(request.getClientNom())
+                            .prenom(request.getClientPrenom())
+                            .telephone(request.getClientTelephone())
+                            .email(request.getClientEmail())
+                            .adresse(request.getClientAdresse())
+                            .build();
+                    return clientRepository.save(client);
+                });
+    }
+
+    private Client mettreAJourClient(Client client, CreateCommandeRequest request) {
+        client.setNom(request.getClientNom());
+        client.setPrenom(request.getClientPrenom());
+        client.setTelephone(request.getClientTelephone());
+        client.setAdresse(request.getClientAdresse());
+        return clientRepository.save(client);
     }
 
     private Client resolveClient(Long clientId) {

@@ -23,14 +23,6 @@
                     </select>
                 </div>
                 <div class="col-md-2">
-                    <select name="clientId" class="form-select">
-                        <option value="">Tous les clients</option>
-                        <option th:each="cl : ${clients}" th:value="${cl.id}"
-                                th:text="${cl.prenom + ' ' + cl.nom}"
-                                th:selected="${clientId != null and clientId == cl.id}"></option>
-                    </select>
-                </div>
-                <div class="col-md-2">
                     <select name="livreurId" class="form-select">
                         <option value="">Tous les livreurs</option>
                         <option th:each="lv : ${livreurs}" th:value="${lv.id}"
@@ -105,14 +97,14 @@
         <ul class="pagination">
             <li class="page-item" th:classappend="${page.first} ? 'disabled'">
                 <a class="page-link"
-                   th:href="@{/commandes(page=${page.number - 1}, statut=${statut}, clientId=${clientId}, livreurId=${livreurId}, priorite=${priorite}, dateDebut=${dateDebut}, dateFin=${dateFin})}">
+                   th:href="@{/commandes(page=${page.number - 1}, statut=${statut}, livreurId=${livreurId}, priorite=${priorite}, dateDebut=${dateDebut}, dateFin=${dateFin})}">
                     Precedent
                 </a>
             </li>
             <li class="page-item disabled"><span class="page-link" th:text="${page.number + 1} + ' / ' + ${page.totalPages}">1 / 1</span></li>
             <li class="page-item" th:classappend="${page.last} ? 'disabled'">
                 <a class="page-link"
-                   th:href="@{/commandes(page=${page.number + 1}, statut=${statut}, clientId=${clientId}, livreurId=${livreurId}, priorite=${priorite}, dateDebut=${dateDebut}, dateFin=${dateFin})}">
+                   th:href="@{/commandes(page=${page.number + 1}, statut=${statut}, livreurId=${livreurId}, priorite=${priorite}, dateDebut=${dateDebut}, dateFin=${dateFin})}">
                     Suivant
                 </a>
             </li>
