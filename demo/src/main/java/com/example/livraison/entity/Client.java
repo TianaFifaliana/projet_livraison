@@ -1,6 +1,5 @@
 package com.example.livraison.entity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -11,7 +10,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -19,7 +17,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "clients")
@@ -46,17 +43,12 @@ public class Client {
     @Column(nullable = false, unique = true, length = 120)
     private String email;
 
-    @CreationTimestamp
-    @Column(updatable = false)
-    private LocalDateTime dateInscription;
+    @Column(length = 255)
+    private String adresse;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", unique = true)
-    private User user;
-
-    @Builder.Default
-    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Adresse> adresses = new ArrayList<>();
+    @JoinColumn(name = "utilisateur_id", unique = true)
+    private Utilisateur utilisateur;
 
     @Builder.Default
     @OneToMany(mappedBy = "client")

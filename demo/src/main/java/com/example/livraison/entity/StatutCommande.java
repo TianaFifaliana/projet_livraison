@@ -1,10 +1,12 @@
 package com.example.livraison.entity;
 
 public enum StatutCommande {
-    EN_ATTENTE,
-    CONFIRMEE,
-    EN_PREPARATION,
-    EXPEDIEE,
+    CREEE,
+    ASSIGNEE,
+    PRISE_EN_CHARGE,
+    EN_TRANSIT,
     LIVREE,
-    ANNULEE
+    ANNULEE,
+    ECHEC_LIVRAISON,
+    RETOURNEE
 }

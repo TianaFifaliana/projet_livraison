@@ -35,13 +35,7 @@ public class Colis {
     private Double poids;
 
     @Column
-    private Double longueur;
-
-    @Column
-    private Double largeur;
-
-    @Column
-    private Double hauteur;
+    private Double volume;
 
     @Builder.Default
     @Column(nullable = false)
